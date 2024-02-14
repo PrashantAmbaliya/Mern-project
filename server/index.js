@@ -1,23 +1,22 @@
-const express = require('express')
-require('dotenv').config()
-const DBconnection = require('./connection/DBconnection')
-const router = require('./routes/apiRouter')
-const cors = require('cors')
+const express = require('express');
+const router = require('./routes/apiRouter');
+const softAuth = require('./auth/softAuth');
+const cors = require('cors');
+const DBconnection = require('./connection/DBconnection');
+require('dotenv').config();
 
-const app = express()
-const port = 8500
-
-
+const app = express();
+const port = 8500;
 
 DBconnection()
     .then(() => console.log("Database Connected.."))
-    .catch((err) => console.log(err))
+    .catch((err) => console.log(err));
 
 app.use(cors());
-app.use(express.json())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+app.use(softAuth);
+app.use('/', router);
 
-app.use('/', router)
-
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));

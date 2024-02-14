@@ -12,7 +12,7 @@ function Navbar() {
                 <div className='text-sm'>
                     <ul className='flex gap-4 justify-between items-center text-white'>
                         <li className='text-2xl font-bold hover:bg-blue-700 ease-in-out p-2 rounded-full'>
-                            <Link to="/cart">
+                            <Link to="/">
                                 Home
                             </Link>
                         </li>

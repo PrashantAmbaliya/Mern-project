@@ -8,8 +8,10 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Navbar from './Navbar';
 import { toast } from 'react-toastify';
+import {useNavigate} from 'react-router-dom';
 
 function Homepage() {
+    const navigate = useNavigate();
     const [products, setProducts] = useState([])
 
     useEffect(() => {
@@ -23,24 +25,31 @@ function Homepage() {
             });
     }, [])
 
-    function AddtoCart(id){
-        fetch("http://localhost:8500/add", {
+    function AddtoCart(id) {
+        if (!localStorage.getItem("Token")) {
+            navigate("/login");
+            return;
+        }
+        const Token = localStorage.getItem("Token");
+    
+        fetch("http://localhost:8500/addtocart", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
             },
-            body: JSON.stringify({ Token , id})
-        }).then((res) => {
+            body: JSON.stringify({ Token, id })
+        })
+        .then((res) => {
             if (res.status !== 200) {
-                return redirect("/signup");
+                return navigate("/signup");
             }
-            toast.success("Added To Cart")
-            return res.JSON()
-        }).then((res) => redirect("/login"))
-            .catch((err) => {
-                console.log(err);
-                return redirect("/signup");
-            })
+            toast.success("Added")
+            return res.json();
+        })
+        .catch((err) => {
+            console.log(err);
+            return navigate("/signup");
+        });
     }
 
     return (
@@ -57,14 +66,14 @@ function Homepage() {
                                 title={item.Name}
                             />
                             <CardContent>
-                                <Typography gutterBottom variant="h5" component="div">
+                                <Typography fontWeight="bold" gutterBottom variant="h5" component="div">
                                     {item.name}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     {item.description}
                                 </Typography>
                                 <Typography gutterBottom variant="h5" component="div">
-                                    {item.basePrice}
+                                ₹ {item.basePrice}
                                 </Typography>
                             </CardContent>
                             <CardActions>
