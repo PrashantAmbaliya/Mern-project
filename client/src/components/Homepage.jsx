@@ -6,26 +6,46 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Navbar from './Navbar';
+import { toast } from 'react-toastify';
 
 function Homepage() {
     const [products, setProducts] = useState([])
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost:8500/products');
-                const responseData = response.data;
-                console.log(responseData);
-
-                setProducts(responseData.Products);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        fetchData();
+        axios.get('http://localhost:8500/products')
+            .then(response => {
+                console.log(response);
+                setProducts(response.data.products);
+            })
+            .catch(error => {
+                console.error('Error fetching data: ', error);
+            });
     }, [])
 
+    function AddtoCart(id){
+        fetch("http://localhost:8500/add", {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({ Token , id})
+        }).then((res) => {
+            if (res.status !== 200) {
+                return redirect("/signup");
+            }
+            toast.success("Added To Cart")
+            return res.JSON()
+        }).then((res) => redirect("/login"))
+            .catch((err) => {
+                console.log(err);
+                return redirect("/signup");
+            })
+    }
+
     return (
+        <>
+        <Navbar />
         <main className='w-full flex items-center flex-col p-4'>
             <div className='max-w-screen-2xl p-4 bg-slate-300 rounded flex flex-wrap gap-5'>
                 {products && products.map((item) => {
@@ -48,13 +68,14 @@ function Homepage() {
                                 </Typography>
                             </CardContent>
                             <CardActions>
-                                <Button size="small">Add To Cart</Button>
+                                <Button onClick={() => AddtoCart(item._id)} size="small">Add To Cart</Button>
                             </CardActions>
                         </Card>
                     )
                 })}
             </div>
         </main>
+        </>
     )
 }
 

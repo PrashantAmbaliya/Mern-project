@@ -26,3 +26,15 @@ exports.loginUser = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+exports.getCart = async (req,res) => {
+    const email = req.email
+    try {
+        const Result = await UserModel.findOne({email: email})
+        if(!Result) return res.status(400).json({ message: "Invalid email or password" });
+
+        res.status(200).json({products: Result.cart})        
+    } catch (error) {
+        res.status(400).json({ error });
+    }
+}
