@@ -12,7 +12,7 @@ function Cart() {
   const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
-    // Fetch cart products and calculate total without discount
+    
     const fetchCartProducts = async () => {
       const token = localStorage.getItem("Token");
       if (!token) {
@@ -43,7 +43,7 @@ function Cart() {
       }
     };
     fetchCartProducts();
-  }, []);
+  }, [navigate]);
 
   const applyCoupon = () => {
 

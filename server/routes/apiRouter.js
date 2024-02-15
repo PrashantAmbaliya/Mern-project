@@ -1,6 +1,7 @@
 const express = require('express');
 const productController = require('../controllers/productController');
 const userController = require('../controllers/userController');
+const { adminLogin, createAdmin } = require('../controllers/adminController');
 
 const router = express.Router();
 
@@ -15,6 +16,10 @@ router.post('/user/login', userController.loginUser);
 
 router.post('/addtocart', userController.addtocart)
 router.post('/get/cart', userController.getCart);
+
+router.post('/admin/login', adminLogin);
+router.post('/admin/register', createAdmin);
+
 
 
 module.exports = router;

@@ -53,7 +53,11 @@ exports.updateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
     const { id } = req.body;
+    const {email} = req.email
     try {
+        if(email == undefined){
+            return res.status(400).json({ message: "Somthing is Wrong" });
+        }
         const deletedProduct = await ProductModel.findByIdAndDelete({ _id: id });
         if (!deletedProduct) {
             return res.status(400).json({ message: "Product not found" });
